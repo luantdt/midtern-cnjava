@@ -1,0 +1,160 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Electronix Store</title>
+<meta http-equiv="Content-Type"
+	content="text/html; charset=windows-1252" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+	crossorigin="anonymous" />
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+	crossorigin="anonymous"></script>
+<script type="text/javascript" th:href="@{/js/boxOver.js}"></script>
+</head>
+
+<body>
+	<div id="main_container">
+		<div class="top_bar">
+			<div class="top_search">
+				<div class="search_text">
+					<div>Search</div>
+				</div>
+				<input type="text" class="search_input" name="search" /> <input
+					type="image" th:src="@{/images/search.gif}" class="search_bt" />
+			</div>
+		</div>
+		<div id="header">
+			<div id="logo">
+				<a href="/"><img th:src="@{/images/logo.png}" alt="" border="0"
+					width="237" height="140" /></a>
+			</div>
+			<!-- end of oferte_content-->
+		</div>
+		<div id="main_content">
+			<div id="menu_tab">
+				<div class="left_menu_corner"></div>
+				<ul class="menu">
+					<li><a href="/" class="nav1">Home</a></li>
+					<li class="divider"></li>
+					<li><a href="/product" class="nav2">Products</a></li>
+					<li class="divider" th:unless="${auth}"></li>
+					<li th:unless="${auth}"><a href="/login" class="nav4">Log
+							in</a></li>
+					<li class="divider" th:if="${auth}"></li>
+					<li th:if="${auth}"><a href="/logout" class="nav4">Log out</a></li>
+					<li class="divider"></li>
+					<li><a href="/order" class="nav5">Your order</a></li>
+					<li class="divider"></li>
+				</ul>
+				<div class="right_menu_corner"></div>
+			</div>
+			<!-- end of menu tab -->
+			<div class="left_content">
+				<div class="title_box">Categories</div>
+				<ul class="left_menu" th:each="category : ${categories}"
+					style="width: 100%">
+					<li class="odd" style="width: 100%"><a style="width: 100%"
+						th:href="@{/category/{category_ID}(category_ID=${category.cate_id})}"
+						th:text="${category.name}" /></li>
+				</ul>
+				<div class="banner_adds">
+					<a href="/"><img th:src="@{/images/bann2.jpg}" alt=""
+						border="0" /></a>
+				</div>
+			</div>
+			<!-- end of left content -->
+			<div class="center_content">
+				<div class="center_title_bar">Your order</div>
+				<div class="accordion mt-5" id="accordionExample">
+					<div class="accordion-item" th:each="detail : ${orderDetail}">
+						<h2 class="accordion-header">
+							<button class="accordion-button collapsed" type="button"
+								data-bs-toggle="collapse" th:data-bs-target="${'#do' + detail.o_id}"
+								aria-expanded="false" th:aria-controls="${'do' + detail.o_id}"
+								th:text="'Your bill is ' + ${detail.total_price} + '.000 VND'">
+							</button>
+							
+						</h2>
+						<div th:id="${'do' + detail.o_id}" class="accordion-collapse collapse"
+							data-bs-parent="#accordionExample">
+							<div class="accordion-body">
+								<div>
+									<h6>Order date</h6>
+									[[${#temporals.format(detail.delivery_date, 'dd/MM/yyyy
+									HH:mm:ss')}]]
+								</div>
+								<div>
+									<h6>Status</h6>
+									Shipping
+								</div>
+								<table class="table mt-3">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Quality</th>
+											<th>Price</th>
+										</tr>
+									</thead>
+									<tbody>
+										<div th:each="unit, iter: ${orderUnit}">
+										<tr th:if="${unit.o_id == detail.o_id}">
+											<td th:text="${proName[iter.index]}"></td>
+											<td th:text="1"></td>
+											<td th:text="${unit.unit_price + '.000 VND'}"></td>
+										</tr>
+										</div>
+										<tr>
+											<th colspan="2" class="table-active">Total item:</th>
+											<th th:text="${detail.total_price + '.000 VND'}">Total:</th>
+										</tr>
+										<tr>
+											<th colspan="2" class="table-active">Delivery fee:</th>
+											<th>20.000 VND</th>
+										</tr>
+										<tr>
+											<th colspan="2" class="table-active">Total:</th>
+											<th th:text="${detail.total_price}+ 20  + '.000 VND'">Total:</th>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+			<!-- end of center content -->
+			<div class="right_content">
+				<div class="title_box">Manufacturers</div>
+				<ul class="left_menu" th:each="brand: ${brands}">
+					<li class="odd"><a style="width: 100%"
+						th:href="@{/brand/{brandId}(brandId=${brand.b_id})}"
+						th:text="${brand.name}" /></li>
+				</ul>
+				<div class="banner_adds">
+					<a href="#"><img th:src="@{/images/bann1.jpg}" alt=""
+						border="0" /></a>
+				</div>
+			</div>
+			<!-- end of right content -->
+		</div>
+		<!-- end of main content -->
+		<div class="footer">
+			<div class="left_footer">
+				<img th:src="@{/images/footer_logo.png}" alt="" width="170"
+					height="49" />
+			</div>
+		</div>
+	</div>
+	<!-- end of main_container -->
+</body>
+
+</html>
